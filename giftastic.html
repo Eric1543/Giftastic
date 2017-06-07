@@ -9,7 +9,7 @@
 	<body>
 		<div class="container">
 		<h1>Wrestling GIFS!</h1>
-			<button style="margin-left:20px" type="text" id="addByClick">Add Your Wrestler!</button>
+			<button style="margin-left:20px" type="text" id="addByClick">Add Your Favorite Wrestler!</button>
 			<input style="padding-left:10px" type="text" id="addWrestler">
 			<div id="wrestlerButtons">
 			
@@ -23,13 +23,13 @@
 			<script type="text/javascript">
 
 				// Starting array of wrestlers
-				var wrestlers = ['Andre The Giant', 'John Cena', 'Big Poppa Pump', 'Brock Lesnar', 'Macho Man Randy Savage', 'Miss Elizabeth', 'Hulk Hogan', 'Booker T', 'Yokozuna'];
+				var topics = ['Andre The Giant', 'John Cena', 'Big Poppa Pump', 'Brock Lesnar', 'Macho Man Randy Savage', 'Miss Elizabeth', 'Hulk Hogan', 'Booker T', 'Yokozuna'];
 
 				// Visitors get to add their own wrestlers
 				// Condition to add only 1 new button per click
 				$('#addByClick').on('click', function(){
-					if(wrestlers.indexOf($('#addWrestler').val().trim()) === -1){
-						wrestlers.push($('#addWrestler').val().trim());
+					if(topics.indexOf($('#addWrestler').val().trim()) === -1){
+						topics.push($('#addWrestler').val().trim());
 						displayButtons();
 					}
 				});
@@ -59,34 +59,44 @@
 					for(var i = 0; i < response.data.length; i++){
 						
 					
-
-					var wrestlerDiv = $('<div>');
-					var p = $('<p>');
-					p.html = response.data[i].rating;
-					var wrestlerImage = $('<img src=' + response.data[i].images.fixed_height.url + '>');
 					
-					wrestlerDiv.text = wrestler;
+					// var p = $('<p>');
+					// p.html = response.data[i].rating;
+					// Create new div per wrestler
+					// Create new image still per wrestler
+					var wrestlerDiv = $('<div>');
+					var wrestlerImage = $('<img src=' + response.data[i].images.fixed_height_still.url + '>');
+					// Add class so I can monitor all gifs with later click event with animate on click option
+					wrestlerImage.addClass('gif');
+					// Animate on click switches image source from still to animated link based on these properties
+					wrestlerImage.attr('data-still', response.data[i].images.fixed_height_still.url);
+					wrestlerImage.attr('data-animate', response.data[i].images.fixed_height.url);
+					wrestlerImage.attr('data-state', 'still');
 					wrestlerDiv.append(wrestlerImage);
- 					
           			// Add new GIF to view GIF area appending per result
 					$('#viewGif').append(wrestlerDiv);
 
 					}
-				});
-        // for (var i = 0; i < results.length; i++) {
-
-        // Step 3: uncomment the for loop above and the closing curly bracket below.
-        // Make a div with jQuery and store it in a variable named animalDiv.
-        // Make a paragraph tag with jQuery and store it in a variable named p.
-        // Set the inner text of the paragraph to the rating of the image in results[i].
-        // Make an image tag with jQuery and store it in a variable named animalImage.
-        // Set the image's src to results[i]'s fixed_height.url.
-        // Append the p variable to the animalDiv variable.
-        // Append the animalImage variable to the animalDiv variable.
-        // Prepend the animalDiv variable to the element with an id of gifs-appear-here.
-
+				}); // End of ajax response function
 				} // End of displaywrestlerGifs
-// data = JSON.parse(request.responseText).data.image_url;
+				
+				// On gif click this function is run
+				function startStop(){
+					// Current state determines click response
+					var state = $(this).attr('data-state')
+					// If still click will animate
+					if (state === 'still'){
+						$(this).attr('src', $(this).attr('data-animate'));
+						$(this).attr('data-state', 'animate');
+					}
+					// If animated click will switch to still
+					else{
+						$(this).attr('src', $(this).attr('data-still'));
+						$(this).attr('data-state', 'still');
+					}
+				}
+
+				$(document).on('click', '.gif', startStop);
 
 				// Render buttons per wrestler in array
 				function displayButtons(){
@@ -94,11 +104,11 @@
 					$('#wrestlerButtons').empty();
 
 					// Rerender buttons per wrestler appending results
-					for(var i in wrestlers){
+					for(var i in topics){
 						var a = $('<button>');
 						a.addClass('wrestler');
-          				a.attr("data-name", wrestlers[i]);
-          				a.text(wrestlers[i]);;
+          				a.attr("data-name", topics[i]);
+          				a.text(topics[i]);;
 						$('#wrestlerButtons').append(a);
 					}
 				}
