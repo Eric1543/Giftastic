@@ -1,0 +1,49 @@
+button,
+div,
+form,
+input,
+img {
+margin: 10px;
+}
+h1{
+font-family:'Permanent Marker', cursive;
+text-align:center;
+color:#324851;
+background-color:#DDD;
+letter-spacing:3px;
+font-size:80px;
+padding:0px;
+padding-top:20px;
+padding-bottom:20px;
+margin:10px;
+margin-top:20px;
+border: 4px solid #90AFC5;
+border-radius:8px;
+}
+img{
+float:left;
+border: 4px solid #90AFC5;
+border-radius:8px;
+}
+button{
+background-color:#90AFC5;
+color:#2A3132;
+border-radius:8px;
+font-weight:bolder;
+}
+body{
+background-color:#324851;
+}
+p{
+position: absolute;
+top:200px;
+}
+input{
+	border-radius:8px;
+}
+#viewGif{
+border: 4px solid #90AFC5;
+border-radius:8px;
+height: 1200px;
+background-color:#DDD;
+}
