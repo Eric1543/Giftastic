@@ -9,7 +9,7 @@
 	<body>
 		<div class="container">
 		<h1>Wrestling GIFS!</h1>
-			<button style="margin-left:20px" type="text">Add Your Favorite Wrestler!</button>
+			<button style="margin-left:20px" type="text" id="addByClick">Add Your Wrestler!</button>
 			<input style="padding-left:10px" type="text" id="addWrestler">
 			<div id="wrestlerButtons">
 			
@@ -21,21 +21,41 @@
 
 			<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 			<script type="text/javascript">
+
+				// Starting array of wrestlers
 				var wrestlers = ['Andre The Giant', 'John Cena', 'Big Poppa Pump', 'Brock Lesnar', 'Macho Man Randy Savage', 'Miss Elizabeth', 'Hulk Hogan', 'Booker T', 'Yokozuna'];
 
-				function displaywrestlerGifs (){
+				// Visitors get to add their own wrestlers
+				// Condition to add only 1 new button per click
+				$('#addByClick').on('click', function(){
+					if(wrestlers.indexOf($('#addWrestler').val().trim()) === -1){
+						wrestlers.push($('#addWrestler').val().trim());
+						displayButtons();
+					}
+				});
 
+				
+				// Search for and display wrestler GIFS
+				function displayWrestlerGifs (){
+
+				// Build up the url with a wrestler and a limit added to the search
 				var wrestler = $(this).attr("data-name");
 				var limit = 10;
 				var gifUrl = 'http://api.giphy.com/v1/gifs/search?q=' + wrestler + '&limit=' + limit + '&api_key=dc6zaTOxFJmzC';
+
 
 				$.ajax({
 					url: gifUrl,
 					method: "GET"
 				}).done(function(response){
 
+					// Store ajax JSON results
 					var results = response.data;
+
+					// Clear GIF area before displaying newly searched GIFS
 					$('#viewGif').empty();
+
+					// Loop over the results (Limit = 10)
 					for(var i = 0; i < response.data.length; i++){
 						
 					
@@ -48,7 +68,7 @@
 					wrestlerDiv.text = wrestler;
 					wrestlerDiv.append(wrestlerImage);
  					
-          			
+          			// Add new GIF to view GIF area appending per result
 					$('#viewGif').append(wrestlerDiv);
 
 					}
@@ -65,21 +85,15 @@
         // Append the animalImage variable to the animalDiv variable.
         // Prepend the animalDiv variable to the element with an id of gifs-appear-here.
 
-
-
-// jQuery(function($) {
-// 	fetch('http://api.giphy.com/v1/gifs/random?tag=funny+cat&rating=g&api_key=dc6zaTOxFJmzC&limit=1').then(function(response) { 
-// 		return response.json();
-// 	}).then(function(my_result) {
-// 		$('#fetch-result').html('<img src="'+my_result.data.image_url+'">');
-// 	});
-// });
 				} // End of displaywrestlerGifs
 // data = JSON.parse(request.responseText).data.image_url;
-				function displayButtons(){
 
+				// Render buttons per wrestler in array
+				function displayButtons(){
+					// Start by clearing buttons
 					$('#wrestlerButtons').empty();
 
+					// Rerender buttons per wrestler appending results
 					for(var i in wrestlers){
 						var a = $('<button>');
 						a.addClass('wrestler');
@@ -88,7 +102,9 @@
 						$('#wrestlerButtons').append(a);
 					}
 				}
-				$(document).on('click', '.wrestler', displaywrestlerGifs)
+
+				// All buttons have a wrestler class, so any one clicked will trigger displaywrestlerGifs();
+				$(document).on('click', '.wrestler', displayWrestlerGifs)
 				displayButtons();
 			</script>
 		</div>
